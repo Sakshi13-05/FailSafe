@@ -1,15 +1,16 @@
-package com.failsafe.failsafe;
+package com.failsafe.ingestion.model;
 
-import lombok.Builder;
-import lombok.Data;
 import java.time.Instant;
 import java.util.UUID;
 
+import lombok.Data;
+
 @Data
-@Builder
 public class Event {
     private UUID eventId;
-    private String sourceId; // Fixed naming to camelCase
+    private String traceId;
+    private String sourceId;
     private String payload;
     private Instant receivedAt;
+    private String version;
 }

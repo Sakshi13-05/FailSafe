@@ -1,17 +1,28 @@
-package com.failsafe.failsafe;
+package com.failsafe.ingestion.mapper;
 
-import org.springframework.stereotype.Component;
+import lombok.Data;
+
 import java.time.Instant;
 import java.util.UUID;
 
-@Component
+import org.springframework.stereotype.Component;
+
+import com.failsafe.ingestion.dto.EventRequest;
+import com.failsafe.ingestion.model.Event;
+
+@Data
 public class EventMapper {
-    public Event toEvent(EventRequest request, UUID eventId, Instant receivedAt) {
-        return Event.builder()
-                .eventId(eventId)
-                .payload(request.getPayload())
-                .sourceId(request.getSourceId()) // Fixed case sensitivity
-                .receivedAt(receivedAt)
-                .build(); // Added missing semicolon
+
+    public Event map(EventRequest req) {
+        Event event = new Event();
+        event.setEventId(UUID.randomUUID());
+        event.setTraceId(UUID.randomUUID().toString());
+        event.setSourceId(req.getSourceId());
+        event.setPayload(req.getPayload());
+
+        event.setReceivedAt(Instant.now());
+        event.setVersion("v1");
+        return (event);
     }
+
 }

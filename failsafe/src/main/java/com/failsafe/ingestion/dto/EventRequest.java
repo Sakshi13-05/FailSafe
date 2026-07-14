@@ -1,4 +1,4 @@
-package com.failsafe.failsafe;
+package com.failsafe.ingestion.dto;
 
 import lombok.Data;
 
