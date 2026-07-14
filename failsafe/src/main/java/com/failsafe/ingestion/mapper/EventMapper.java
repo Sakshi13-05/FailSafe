@@ -11,6 +11,7 @@ import com.failsafe.ingestion.dto.EventRequest;
 import com.failsafe.ingestion.model.Event;
 
 @Data
+@Component
 public class EventMapper {
 
     public Event map(EventRequest req) {
