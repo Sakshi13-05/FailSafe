@@ -1,10 +1,10 @@
-package com.failsafe.demo;
+package com.failsafe.ingestion;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemoApplicationTests {
+class FailsafeApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -11,6 +11,12 @@ java {
     sourceCompatibility = '17'
 }
 
+// Force compiler to run in a separate JVM to avoid JAVA_TOOL_OPTIONS conflicts
+tasks.withType(JavaCompile).configureEach {
+    options.fork = true
+    options.encoding = 'UTF-8'
+}
+
 repositories {
     mavenCentral()
 }
@@ -22,15 +28,9 @@ dependencies {
     // This allows your app to receive REST calls (Web API)
     implementation 'org.springframework.boot:spring-boot-starter-web'
     
-    // This is the "Fail Safe" messaging library for Kafka
-    implementation 'org.springframework.kafka:spring-kafka'
     
-    // Lombok makes your Java code cleaner (less boilerplate)
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.kafka:spring-kafka-test'
+
 }
 
 tasks.named('test') {

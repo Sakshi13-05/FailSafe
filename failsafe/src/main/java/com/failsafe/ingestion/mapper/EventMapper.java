@@ -1,7 +1,5 @@
 package com.failsafe.ingestion.mapper;
 
-import lombok.Data;
-
 import java.time.Instant;
 import java.util.UUID;
 
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.failsafe.ingestion.dto.EventRequest;
 import com.failsafe.ingestion.model.Event;
 
-@Data
 @Component
 public class EventMapper {
 

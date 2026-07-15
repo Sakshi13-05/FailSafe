@@ -1,0 +1,8 @@
+### Create Event
+POST http://localhost:8080/events
+Content-Type: application/json
+
+{
+  "sourceId": "sensor-1",
+  "payload": "temperature=32"
+}
