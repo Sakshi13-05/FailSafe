@@ -28,6 +28,8 @@ dependencies {
     // This allows your app to receive REST calls (Web API)
     implementation 'org.springframework.boot:spring-boot-starter-web'
     
+    // Kafka support (KafkaTemplate, producer/consumer configs, etc.)
+    implementation 'org.springframework.kafka:spring-kafka'
     
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
