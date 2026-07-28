@@ -4,6 +4,7 @@ import com.failsafe.ingestion.model.Event;
 
 import java.util.concurrent.CompletableFuture;
 
+import org.apache.kafka.common.protocol.types.Field.Str;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -21,8 +22,8 @@ public class KafkaProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void publish(Event event) {
-        CompletableFuture<SendResult<String, Event>> future = kafkaTemplate.send("raw-ingestion", event);
+    public void publish(String key, Event event) {
+        CompletableFuture<SendResult<String, Event>> future = kafkaTemplate.send("raw-ingestion", key, event);
         future.whenComplete((result, exception) -> {
             if (exception == null) {
                 // Success path
@@ -32,7 +33,7 @@ public class KafkaProducer {
                         result.getRecordMetadata().offset());
             } else {
                 // Failure path
-                log.error("Failed to send event: {}", event, exception);
+                log.error("Failed to send event with key {}: {}", key, event, exception);
             }
         });
     }

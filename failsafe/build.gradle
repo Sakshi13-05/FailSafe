@@ -8,7 +8,9 @@ group = 'com.failsafe'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '17'
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 // Force compiler to run in a separate JVM to avoid JAVA_TOOL_OPTIONS conflicts
