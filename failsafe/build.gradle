@@ -30,6 +30,9 @@ dependencies {
     // This allows your app to receive REST calls (Web API)
     implementation 'org.springframework.boot:spring-boot-starter-web'
     
+    // Spring Boot Validation (Jakarta Validation)
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    
     // Kafka support (KafkaTemplate, producer/consumer configs, etc.)
     implementation 'org.springframework.kafka:spring-kafka'
     
