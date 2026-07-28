@@ -64,4 +64,4 @@ Fail Safe is a distributed backend system designed to handle massive data stream
 ### Quick Start
 1. **Clone the repo**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/fail-safe.git
+   https://github.com/Sakshi13-05/FailSafe
