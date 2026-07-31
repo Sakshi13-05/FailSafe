@@ -1,10 +1,6 @@
 package com.failsafe.ingestion.kafka;
 
-import com.failsafe.ingestion.model.Event;
-
 import java.util.concurrent.CompletableFuture;
-
-import org.apache.kafka.common.protocol.types.Field.Str;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -15,25 +11,28 @@ import org.springframework.stereotype.Component;
 public class KafkaProducer {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaProducer.class);
+    private static final String DEFAULT_TOPIC = "failsafe-events-topic";
 
-    private final KafkaTemplate<String, Event> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    public KafkaProducer(KafkaTemplate<String, Event> kafkaTemplate) {
+    public KafkaProducer(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void publish(String key, Event event) {
-        CompletableFuture<SendResult<String, Event>> future = kafkaTemplate.send("raw-ingestion", key, event);
+    public void publish(String key, Object event) {
+        publish(DEFAULT_TOPIC, key, event);
+    }
+
+    public void publish(String topic, String key, Object event) {
+        CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, event);
         future.whenComplete((result, exception) -> {
             if (exception == null) {
-                // Success path
-                log.info("Successfully sent event to topic: {} partition: {} offset: {}",
+                log.info("Successfully sent event to topic [{}] partition: {} offset: {}",
                         result.getRecordMetadata().topic(),
                         result.getRecordMetadata().partition(),
                         result.getRecordMetadata().offset());
             } else {
-                // Failure path
-                log.error("Failed to send event with key {}: {}", key, event, exception);
+                log.error("Failed to send event to topic [{}] with key [{}]: {}", topic, key, event, exception);
             }
         });
     }
