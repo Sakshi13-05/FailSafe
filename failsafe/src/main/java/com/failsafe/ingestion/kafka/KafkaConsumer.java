@@ -1,8 +1,9 @@
 package com.failsafe.ingestion.kafka;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.failsafe.ingestion.entity.EventEntity;
 import com.failsafe.ingestion.repository.EventRepository;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,22 +17,18 @@ public class KafkaConsumer {
     @Autowired
     private EventRepository eventRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @KafkaListener(topics = "failsafe-events-topic", groupId = "failsafe-group")
-    public void consume(Object event) {
-        log.info("Received event from Kafka topic [failsafe-events-topic]: {}", event);
+    public void consume(ConsumerRecord<String, String> record) {
+        String payloadJson = record.value(); // Change parameter to String!
+        log.info("Received raw event payload from Kafka: {}", payloadJson, record.offset());
         try {
-            String payloadJson = objectMapper.writeValueAsString(event);
-
-            // Persist event into MySQL via Hibernate / Spring Data JPA
-            EventEntity entity = new EventEntity("kafka-consumer", "GENERIC_EVENT", payloadJson);
+            // Persist raw JSON payload directly into MySQL via Hibernate
+            EventEntity entity = new EventEntity("kafka-consumer", "SIGNUP_EVENT", payloadJson);
             EventEntity savedEntity = eventRepository.save(entity);
 
             log.info("Successfully persisted event to MySQL database table [events] with ID: {}", savedEntity.getId());
         } catch (Exception e) {
-            log.error("Failed to process and persist event from Kafka into MySQL: {}", event, e);
+            log.error("Failed to persist event into MySQL: {}", payloadJson, e);
         }
     }
 }

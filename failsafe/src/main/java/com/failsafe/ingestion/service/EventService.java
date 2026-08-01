@@ -20,7 +20,8 @@ public class EventService {
     public Event process(EventRequest req) {
         Event event = eventMapper.map(req);
         String key = req.getSourceId();
-        kafkaProducer.publish(key, event);
+        String topic = "failsafe-events-topic";
+        kafkaProducer.publish(topic, key, event);
         return event;
     }
 }

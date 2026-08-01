@@ -1,39 +1,30 @@
 package com.failsafe.ingestion.kafka;
 
-import java.util.concurrent.CompletableFuture;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class KafkaProducer {
-
     private static final Logger log = LoggerFactory.getLogger(KafkaProducer.class);
-    private static final String DEFAULT_TOPIC = "failsafe-events-topic";
 
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
-    public KafkaProducer(KafkaTemplate<String, Object> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-    }
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    public void publish(String key, Object event) {
-        publish(DEFAULT_TOPIC, key, event);
-    }
-
-    public void publish(String topic, String key, Object event) {
-        CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send(topic, key, event);
-        future.whenComplete((result, exception) -> {
-            if (exception == null) {
-                log.info("Successfully sent event to topic [{}] partition: {} offset: {}",
-                        result.getRecordMetadata().topic(),
-                        result.getRecordMetadata().partition(),
-                        result.getRecordMetadata().offset());
-            } else {
-                log.error("Failed to send event to topic [{}] with key [{}]: {}", topic, key, event, exception);
-            }
-        });
+    public void publish(String topic, String key, Object payload) {
+        try {
+            // Convert object/map cleanly to a JSON string
+            String jsonPayload = objectMapper.writeValueAsString(payload);
+            kafkaTemplate.send(topic, key, jsonPayload);
+            log.info("Published message to topic {} with key {}: {}", topic, key, jsonPayload);
+        } catch (Exception e) {
+            log.error("Failed to convert and publish message to Kafka", e);
+        }
     }
 }
