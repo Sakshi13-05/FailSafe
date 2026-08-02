@@ -1,0 +1,165 @@
+What is my project about??
+How can we build a backend that can continue accepting requests even when downstream processing or the database becomes slow?
+
+Requirement:
+• Accept events from clients.
+• Store every event reliably.
+• Avoid losing events if processing becomes slow.
+• Decouple request handling from database operations.
+
+FailSafe, which is an event-driven backend system that I'm building using Java, Spring Boot, Apache Kafka, and PostgreSQL.
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+Problem it solve!!
+
+The idea behind this project is that modern systems receive thousands of requests simultaneously. If every request directly communicates with the database, the system becomes tightly coupled and difficult to scale. A temporary database slowdown can affect the entire application. I wanted to understand how production systems decouple request processing and handle high traffic reliably.
+
+Q--Why it become tightly coupled??
+Client
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Database
+
+Now imagine the database becomes slow.
+
+The Service cannot continue until the database responds.
+
+The Controller also waits.
+
+The Client waits.
+
+Everything depends on the database.
+
+This is called tight coupling because every component is directly dependent on the next one.
+
+Any slowdown propagates through the entire application.
+
+------------------------------------------------------
+Q--What is scaling??
+Scalability is the ability of a system to continue performing efficiently even when the number of users or requests increases.
+
+Example:
+
+100 Requests/sec
+
+↓
+
+10,000 Requests/sec
+
+If the application can still process requests efficiently by increasing resources, it is scalable.
+
+There are two types:
+
+Vertical Scaling
+
+Increase CPU or RAM of the same server.
+
+Horizontal Scaling
+
+Add multiple servers.
+
+Production systems generally prefer Horizontal Scaling.
+
+----------------------------------------------------
+Explaining case  what happes when DB become slowdown
+Increased response time
+Request timeout
+Thread blocking
+Reduced throughput
+Poor user experience
+
+---------------------------------------------------
+
+Solution I am trying to build??
+
+To solve this, I designed FailSafe as an asynchronous event-driven architecture. Instead of directly processing every request, the application first publishes the incoming event to Kafka. Kafka acts as a durable event stream, allowing producers and consumers to work independently.
+
+Other use cases of Kafka and why i did use here??
+
+Architecture of Version 1:
+Client
+
+↓
+
+Spring Boot REST API
+
+↓
+
+Controller
+
+↓
+
+Service
+
+↓
+
+Kafka Producer
+
+↓
+
+Kafka Topic (raw-ingestion)
+
+↓
+
+Kafka Consumer
+
+↓
+
+Processing Service
+
+↓
+
+MySQL
+
+When a client sends a request, the controller validates it and passes it to the service layer. The service publishes the event using KafkaProducer. Kafka stores the event inside a topic. A consumer listens to that topic, processes the event independently, and finally persists it into PostgreSQL. This makes the producer and consumer loosely coupled and improves scalability.
+
+
+Why Mysql and not other??
+
+The role of each component/class:
+
+Why kafka??
+Kafka acts as a distributed event streaming platform.
+
+It temporarily stores events inside Topics until consumers process them.
+
+Advantages
+
+High Throughput
+Fault Tolerance
+Scalability
+Durable Storage
+Asynchronous Communication
+
+My objective was not just messaging.
+
+I wanted to understand
+
+asynchronous communication
+producer-consumer architecture
+event streaming
+distributed backend design
+
+which are common in production systems.
+_______________________________________________
+
+What happens we remove kafka 
+why kafkatemplate 
+why producer and consumer are separate??
+
+What is meant by persisting
+
+What are event driven system??
+
+My contribution
+
+I designed the project architecture myself. I implemented the REST APIs, configured Kafka producers, created the event model and mapping layer, integrated the consumer with the database, and focused on understanding every design decision rather than just making the project work. My goal was to build a project that reflects production backend practices.
+
+
+Version 2 from this week??
+
+Currently, this is Version 1. In Version 2, I plan to extend it into a microservices architecture by introducing API Gateway, Service Discovery, distributed transactions using the Saga pattern, Redis caching, Docker, Kubernetes, monitoring, and CI/CD.
