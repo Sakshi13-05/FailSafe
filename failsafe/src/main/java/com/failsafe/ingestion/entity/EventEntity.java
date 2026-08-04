@@ -17,7 +17,6 @@ public class EventEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Auto-incrementing primary key
 
-    @Column(name = "event_id")
     private String eventId; // The unique string UUID field
 
     private String sourceId;
