@@ -15,7 +15,7 @@ public class EventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String sourceId;
 
@@ -26,7 +26,8 @@ public class EventEntity {
 
     private LocalDateTime createdAt;
 
-    public EventEntity() {}
+    public EventEntity() {
+    }
 
     public EventEntity(String sourceId, String eventType, String payload) {
         this.sourceId = sourceId;
@@ -39,12 +40,12 @@ public class EventEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(String uniqueEventId) {
+        this.id = uniqueEventId;
     }
 
     public String getSourceId() {

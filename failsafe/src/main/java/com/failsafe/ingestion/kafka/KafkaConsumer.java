@@ -22,8 +22,12 @@ public class KafkaConsumer {
         String payloadJson = record.value(); // Change parameter to String!
         log.info("Received raw event payload from Kafka: {}", payloadJson, record.offset());
         try {
-            // Persist raw JSON payload directly into MySQL via Hibernate
-            EventEntity entity = new EventEntity("kafka-consumer", "SIGNUP_EVENT", payloadJson);
+            String uniqueEventId = java.util.UUID.randomUUID().toString();
+            EventEntity entity = new EventEntity();
+            entity.setSourceId("kafka-consumer");
+            entity.setEventType("SIGNUP_EVENT");
+            entity.setPayload(payloadJson);
+            entity.setId(uniqueEventId);
             EventEntity savedEntity = eventRepository.save(entity);
 
             log.info("Successfully persisted event to MySQL database table [events] with ID: {}", savedEntity.getId());
