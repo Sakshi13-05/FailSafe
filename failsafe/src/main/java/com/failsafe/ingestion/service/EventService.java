@@ -27,7 +27,7 @@ public class EventService {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "failsafe-events-topic", groupId = "failsafe-group-v2")
+    @KafkaListener(topics = "failsafe-events-topic", groupId = "failsafe-group-v3")
     public void consumeEvent(String message) {
         System.out.println("----------------------------------------");
         System.out.println("Received message from Kafka: " + message);
