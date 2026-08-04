@@ -15,7 +15,9 @@ public class EventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id; // <-- Changed from String to Long
+
+    private String eventId; // <-- Added this back so it maps correctly
 
     private String sourceId;
 
@@ -40,12 +42,20 @@ public class EventEntity {
         this.createdAt = LocalDateTime.now();
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String uniqueEventId) {
-        this.id = uniqueEventId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 
     public String getSourceId() {

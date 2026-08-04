@@ -27,7 +27,8 @@ public class KafkaConsumer {
             entity.setSourceId("kafka-consumer");
             entity.setEventType("SIGNUP_EVENT");
             entity.setPayload(payloadJson);
-            entity.setId(uniqueEventId);
+            entity.setEventId(uniqueEventId); // Populates eventId cleanly without touching the auto-increment primary
+                                              // key id
             EventEntity savedEntity = eventRepository.save(entity);
 
             log.info("Successfully persisted event to MySQL database table [events] with ID: {}", savedEntity.getId());
