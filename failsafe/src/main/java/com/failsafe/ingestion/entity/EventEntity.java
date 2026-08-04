@@ -17,6 +17,7 @@ public class EventEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // <-- Changed from String to Long
 
+    @Column(name = "event_id")
     private String eventId; // <-- Added this back so it maps correctly
 
     private String sourceId;
