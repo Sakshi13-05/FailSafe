@@ -6,7 +6,7 @@ import {
     BarChart3, HelpCircle, UserCheck, ShieldAlert
 } from 'lucide-react';
 import './UserDashboard.css';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+import { API_BASE_URL } from '../../services/api';
 
 
 export default function UserDashboard({ currentUser, onLogout, onUpdateUser }) {

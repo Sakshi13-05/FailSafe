@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Eye, EyeOff, Check, AlertCircle } from 'lucide-react';
 import './AuthModal.css';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+import { API_BASE_URL } from '../services/api';
 
 
 export default function AuthModal({ isOpen, onClose, initialView, onAuthSuccess }) {

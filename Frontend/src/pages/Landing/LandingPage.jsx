@@ -4,7 +4,7 @@ import {
 } from 'lucide-react';
 import StoreCard from '../../components/StoreCard';
 import './LandingPage.css';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+import { API_BASE_URL } from '../../services/api';
 
 
 export default function LandingPage({ onOpenAuth, onSelectStoreToRate }) {

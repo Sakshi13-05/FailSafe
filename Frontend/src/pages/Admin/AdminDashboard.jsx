@@ -7,7 +7,7 @@ import './AdminDashboard.css';
 import { getDashboardStats } from '../../services/adminService';
 import { getAllUsers, addUser, getOwners, updateUser, deleteUser } from '../../services/adminService';
 import { addStore, getAllStores, updateStore, deleteStore } from '../../services/storeService';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+import { API_BASE_URL } from '../../services/api';
 
 
 
