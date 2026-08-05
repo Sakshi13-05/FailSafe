@@ -1,26 +1,32 @@
 package com.failsafe.ingestion.mapper;
 
-import java.time.Instant;
-import java.util.UUID;
-
-import org.springframework.stereotype.Component;
-
 import com.failsafe.ingestion.dto.EventRequest;
-import com.failsafe.ingestion.model.Event;
+import com.failsafe.ingestion.entity.EventEntity;
+import org.springframework.stereotype.Component;
+import java.util.UUID;
 
 @Component
 public class EventMapper {
 
-    public Event map(EventRequest req) {
-        Event event = new Event();
-        event.setEventId(UUID.randomUUID());
-        event.setTraceId(UUID.randomUUID().toString());
-        event.setSourceId(req.getSourceId());
-        event.setPayload(req.getPayload());
+    public EventEntity toEntity(EventRequest req) {
+        if (req == null) {
+            return null;
+        }
 
-        event.setReceivedAt(Instant.now());
-        event.setVersion("v1");
-        return (event);
+        EventEntity entity = new EventEntity();
+
+        // Logical ID: Unique identifier for this specific event
+        entity.setEventId(UUID.randomUUID().toString());
+
+        // Mapping from Request DTO
+        entity.setSourceId(req.getSourceId());
+        entity.setPayload(req.getPayload());
+
+        // Defaulting the event type for this flow
+        entity.setEventType("RAW_INGEST_STREAM");
+
+        // Note: createdAt is handled by @PrePersist in EventEntity
+
+        return entity;
     }
-
 }

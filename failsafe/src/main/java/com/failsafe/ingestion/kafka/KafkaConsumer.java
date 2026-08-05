@@ -1,8 +1,10 @@
 package com.failsafe.ingestion.kafka;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.failsafe.ingestion.dto.EventRequest;
 import com.failsafe.ingestion.entity.EventEntity;
+import com.failsafe.ingestion.mapper.EventMapper;
 import com.failsafe.ingestion.repository.EventRepository;
-
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,23 +19,32 @@ public class KafkaConsumer {
     @Autowired
     private EventRepository eventRepository;
 
+    @Autowired
+    private EventMapper eventMapper;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    // Matches your requested topic and group
     @KafkaListener(topics = "failsafe-events-topic", groupId = "failsafe-group-v4")
     public void consume(ConsumerRecord<String, String> record) {
-        String payloadJson = record.value(); // Change parameter to String!
-        log.info("Received raw event payload from Kafka: {}", payloadJson, record.offset());
+        String payloadJson = record.value();
+        log.info("Received event from Kafka topic [failsafe-events-topic] at offset: {}", record.offset());
+
         try {
-            String uniqueEventId = java.util.UUID.randomUUID().toString();
-            EventEntity entity = new EventEntity();
-            entity.setSourceId("kafka-consumer");
-            entity.setEventType("SIGNUP_EVENT");
-            entity.setPayload(payloadJson);
-            entity.setEventId(uniqueEventId); // Populates eventId cleanly without touching the auto-increment primary
-                                              // key id
+            // 1. Deserialize: Convert raw JSON string to EventRequest DTO
+            EventRequest request = objectMapper.readValue(payloadJson, EventRequest.class);
+
+            // 2. Map: Convert DTO to Entity using our Mapper
+            EventEntity entity = eventMapper.toEntity(request);
+
+            // 3. Persist: Save to MySQL
             EventEntity savedEntity = eventRepository.save(entity);
 
-            log.info("Successfully persisted event to MySQL database table [events] with ID: {}", savedEntity.getId());
+            log.info("Successfully persisted to MySQL. DB Primary Key: {}, Event Logical ID: {}",
+                    savedEntity.getId(), savedEntity.getEventId());
         } catch (Exception e) {
-            log.error("Failed to persist event into MySQL: {}", payloadJson, e);
+            log.error("Failed to process Kafka message: {}. Error: {}", payloadJson, e.getMessage());
         }
     }
 }
