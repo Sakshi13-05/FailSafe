@@ -17,7 +17,7 @@ public class KafkaConsumer {
     @Autowired
     private EventRepository eventRepository;
 
-    @KafkaListener(topics = "failsafe-events-topic", groupId = "failsafe-group-v3")
+    @KafkaListener(topics = "failsafe-events-topic", groupId = "failsafe-group-v4")
     public void consume(ConsumerRecord<String, String> record) {
         String payloadJson = record.value(); // Change parameter to String!
         log.info("Received raw event payload from Kafka: {}", payloadJson, record.offset());
