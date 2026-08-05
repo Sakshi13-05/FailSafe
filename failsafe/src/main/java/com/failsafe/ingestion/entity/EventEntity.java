@@ -15,22 +15,29 @@ public class EventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // Auto-incrementing primary key
+    @Column(name = "id", nullable = false, updatable = false)
+    private Long id; // Auto-incrementing primary key BIGINT
 
-    private String eventId; // The unique string UUID field
+    @Column(name = "event_id", length = 255)
+    private String eventId; // VARCHAR(255)
 
-    private String sourceId;
+    @Column(name = "source_id", length = 255)
+    private String sourceId; // VARCHAR(255)
 
-    private String eventType;
+    @Column(name = "event_type", length = 255)
+    private String eventType; // VARCHAR(255)
 
-    @Column(columnDefinition = "TEXT")
-    private String payload;
+    @Column(name = "payload", columnDefinition = "TEXT")
+    private String payload; // TEXT
 
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", columnDefinition = "DATETIME(6)")
+    private LocalDateTime createdAt; // DATETIME(6)
 
     @PrePersist
     protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
+        if (this.createdAt == null) {
+            this.createdAt = LocalDateTime.now();
+        }
     }
 
     // Getters and Setters
