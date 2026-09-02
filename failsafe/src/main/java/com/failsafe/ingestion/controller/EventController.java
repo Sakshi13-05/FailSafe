@@ -1,3 +1,10 @@
+// "The entry point is the EventController. 
+// Under the hood, Spring’s DispatcherServlet routes the incoming web request to my endpoint,
+//  and Jackson deserializes the JSON payload into my Java object. 
+// From there, the controller's only job is to hand the payload to the KafkaProducer. 
+// Because it only waits for a 5-millisecond acknowledgment from Kafka instead of a heavy database transaction,
+//  the HTTP thread is instantly freed, making the API incredibly resilient to traffic spikes."
+//
 package com.failsafe.ingestion.controller;
 
 import com.failsafe.ingestion.dto.ApiResponse;
