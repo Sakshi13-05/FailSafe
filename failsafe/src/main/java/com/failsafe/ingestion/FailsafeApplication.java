@@ -2,6 +2,7 @@ package com.failsafe.ingestion;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.File;
 import java.io.InputStream;
@@ -9,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 @SpringBootApplication
+@EnableScheduling
 public class FailsafeApplication {
 
     public static void main(String[] args) {
