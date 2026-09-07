@@ -10,8 +10,8 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic myProjectTopic() {
-        // Replace "store-reviews" with your actual topic name
-        return TopicBuilder.name("store-reviews")
+        
+        return TopicBuilder.name("failsafe-events-topic")
                 .partitions(3)
                 .replicas(1)
                 .build();
