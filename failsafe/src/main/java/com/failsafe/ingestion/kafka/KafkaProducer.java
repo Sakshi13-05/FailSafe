@@ -54,7 +54,7 @@ public class KafkaProducer {
 
         } catch (Exception e) {
             // Catches local JSON serialization errors before hitting network buffer
-            log.error("Failed to serialize payload before sending to Kafka topic [{}]", topic, e);
+            log.error("Immediate failure occurred before sending message to Kafka topic [{}]: {}", topic, e.getMessage());
         }
     }
 }
